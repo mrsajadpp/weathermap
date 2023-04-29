@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="A weather forecasting website service by thintry.">
+    <meta name="keywords" content="thintry,weather,rain,sun,humidity,wint">
+    <title>Weather by Thintry</title>
+    <link rel="stylesheet" href="./assets/css/style.css">
+</head>
+
+<body>
+    <div class="container">
+        <div class="sunder">
+            <div class="details">
+                <div class="temp">
+                    <img src="" alt="" id="img">
+                    <div class="data">
+                        <span><span id="temp"></span>C&deg;</span>
+                    </div>
+                    <div class="more">
+                        <span>Humidity: <span id="humidity"></span>%</span>
+                        <span>Wind: <span id="wind"></span>Km/H</span>
+                        <span>City: <span id="city"></span></span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script>
+        let image = document.getElementById('img')
+        let temp = document.getElementById('temp');
+        let humidity = document.getElementById('humidity');
+        let wind = document.getElementById('wind');
+        let city = document.getElementById('city');
+        let API = 'eb5902cf0549084f764ec2a9fabe974f';
+        if ("geolocation" in navigator) {
+            navigator.geolocation.getCurrentPosition(function (position) {
+                check(position.coords.latitude, position.coords.longitude)
+            });
+        } else {
+            console.log("Geolocation is not available.");
+        }
+        async function check(lat, lon) {
+            let data = await fetch(`https://api.openweathermap.org/data/2.5/weather?lat=${lat}&lon=${lon}&units=metric&appid=${API}&exclude=current`);
+            data.json().then((output) => {
+                console.log(output);
+                city.innerHTML = output.name;
+                temp.innerHTML = output.main.temp;
+                humidity.innerHTML = output.main.humidity;
+                wind.innerHTML = output.wind.speed;
+                image.src = 'https://openweathermap.org/img/wn/' + output.weather[0].icon + '@2x.png';
+            });
+        }
+    </script>
+</body>
+
+</html>
